@@ -7,7 +7,7 @@ import jakarta.validation.constraints.Size;
 public class PessoaRequestDTO {
 
 	@NotBlank(message = "O nome e obrigatorio.")
-	@Size(min = 4, max = 150, message = "O nome deve ter entre 4 e 150 caracteres.")
+	@Size(min = 1, max = 255, message = "O nome deve ter entre 1 e 254 caracteres.")
 	private String nome;
 
 	@NotBlank(message = "O CPF e obrigatorio.")
@@ -16,7 +16,7 @@ public class PessoaRequestDTO {
 
 	@NotBlank(message = "O email e obrigatorio.")
 	@Email(message = "O email deve ser valido.")
-	@Size(max = 150, message = "O email deve ter no maximo 150 caracteres.")
+	@Size(min = 6, max = 254, message = "O email deve ter entre 6 e 254 caracteres.")
 	private String email;
 
 	public PessoaRequestDTO() {

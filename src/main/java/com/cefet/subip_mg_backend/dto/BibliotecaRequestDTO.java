@@ -6,7 +6,7 @@ import jakarta.validation.constraints.Size;
 public class BibliotecaRequestDTO {
 
 	@NotBlank(message = "O nome e obrigatorio.")
-	@Size(min = 3, max = 150, message = "O nome deve ter entre 3 e 150 caracteres.")
+	@Size(max = 255, message = "O nome deve possuir no maximo 255 caracteres.")
 	private String nome;
 
 	public BibliotecaRequestDTO() {

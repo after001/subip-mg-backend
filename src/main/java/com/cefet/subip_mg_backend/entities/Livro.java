@@ -14,7 +14,7 @@ public class Livro {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	@Column(nullable = false, length = 200)
+	@Column(nullable = false, length = 255)
 	private String titulo;
 
 	@Column(nullable = false, unique = true, length = 17)

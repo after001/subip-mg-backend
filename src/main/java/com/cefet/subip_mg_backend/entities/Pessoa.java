@@ -14,13 +14,13 @@ public class Pessoa {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	@Column(nullable = false, length = 150)
+	@Column(nullable = false, length = 255)
 	private String nome;
 
 	@Column(nullable = false, unique = true, length = 14)
 	private String cpf;
 
-	@Column(nullable = false, unique = true, length = 150)
+	@Column(nullable = false, unique = true, length = 254)
 	private String email;
 
 	public Pessoa() {

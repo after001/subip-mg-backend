@@ -1,16 +1,20 @@
 package com.cefet.subip_mg_backend.dto;
 
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
 public class LivroRequestDTO {
 
 	@NotBlank(message = "O titulo e obrigatorio.")
-	@Size(min = 2, max = 200, message = "O titulo deve ter entre 2 e 200 caracteres.")
+	@Size(max = 255, message = "O titulo deve ter entre 2 e 254 caracteres.")
 	private String titulo;
 
-	@NotBlank(message = "O ISBN e obrigatorio.")
-	@Size(min = 10, max = 17, message = "O ISBN deve ter entre 10 e 17 caracteres.")
+	@NotBlank(message = "O ISBN é obrigatório.")
+	@Pattern(
+			regexp = "^(\\d{13}|(978|979)-\\d{1,5}-\\d{1,7}-\\d{1,7}-\\d{1})$",
+			message = "O ISBN deve ter 13 dígitos numéricos ou o formato padrão com hífens (ex: 978-85-359-0277-7)."
+	)
 	private String isbn;
 
 	public LivroRequestDTO() {

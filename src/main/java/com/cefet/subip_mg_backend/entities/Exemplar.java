@@ -20,7 +20,7 @@ public class Exemplar {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	@Column(nullable = false, unique = true, length = 30)
+	@Column(nullable = false, unique = true, length = 50)
 	private String tombo;
 
 	@Enumerated(EnumType.STRING)

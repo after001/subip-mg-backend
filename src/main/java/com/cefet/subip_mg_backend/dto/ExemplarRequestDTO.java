@@ -9,7 +9,7 @@ import jakarta.validation.constraints.Size;
 public class ExemplarRequestDTO {
 
 	@NotBlank(message = "O tombo e obrigatorio.")
-	@Size(min = 3, max = 30, message = "O tombo deve ter entre 3 e 30 caracteres.")
+	@Size(max = 50, message = "O tombo deve possuir no maximo 50 caracteres.")
 	private String tombo;
 
 	@NotNull(message = "A situacao e obrigatoria.")
