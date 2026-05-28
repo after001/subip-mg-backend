@@ -156,6 +156,47 @@ class CrudControllerTests {
 
 		mockMvc.perform(delete("/exemplares/{id}", exemplarId))
 				.andExpect(status().isNoContent());
+
+		mockMvc.perform(get("/emprestimos"))
+				.andExpect(status().isOk())
+				.andExpect(jsonPath("$.length()").value(0));
+
+		String emprestimoJson = """
+				{
+					"dataRetirada": "2026-05-28",
+					"dataDevolucaoPrevista": "2026-06-04",
+					"exemplarId": 1,
+					"pessoaId": 1
+				}
+				""";
+
+		String emprestimoResponse = mockMvc.perform(post("/emprestimos")
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(emprestimoJson))
+				.andExpect(status().isCreated())
+				.andExpect(jsonPath("$.situacao").value("EM_ANDAMENTO"))
+				.andExpect(jsonPath("$.exemplarId").value(1))
+				.andExpect(jsonPath("$.pessoaId").value(1))
+				.andReturn()
+				.getResponse()
+				.getContentAsString();
+
+		Long emprestimoId = getId(emprestimoResponse);
+
+		mockMvc.perform(get("/emprestimos/{id}", emprestimoId))
+				.andExpect(status().isOk())
+				.andExpect(jsonPath("$.dataRetirada").value("2026-05-28"))
+				.andExpect(jsonPath("$.dataDevolucaoPrevista").value("2026-06-04"));
+
+		mockMvc.perform(get("/exemplares/1"))
+				.andExpect(status().isOk())
+				.andExpect(jsonPath("$.situacao").value("EMPRESTADO"));
+
+		mockMvc.perform(post("/emprestimos")
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(emprestimoJson))
+				.andExpect(status().isBadRequest())
+				.andExpect(jsonPath("$.message").value("Somente exemplares disponiveis podem ser emprestados."));
 	}
 
 	private Long getId(String json) throws Exception {

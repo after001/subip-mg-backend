@@ -7,13 +7,13 @@ import jakarta.validation.constraints.Size;
 public class LivroRequestDTO {
 
 	@NotBlank(message = "O titulo e obrigatorio.")
-	@Size(max = 255, message = "O titulo deve ter entre 2 e 254 caracteres.")
+	@Size(max = 255, message = "O titulo deve possuir no maximo 255 caracteres.")
 	private String titulo;
 
-	@NotBlank(message = "O ISBN é obrigatório.")
+	@NotBlank(message = "O ISBN e obrigatorio.")
 	@Pattern(
-			regexp = "^(\\d{13}|(978|979)-\\d{1,5}-\\d{1,7}-\\d{1,7}-\\d{1})$",
-			message = "O ISBN deve ter 13 dígitos numéricos ou o formato padrão com hífens (ex: 978-85-359-0277-7)."
+			regexp = "^(\\d{13}|\\d{3}\\.\\d{2}\\.\\d{3}-\\d{4}-\\d)$",
+			message = "O ISBN deve possuir 13 digitos numericos ou seguir o formato 978.85.359-0277-7."
 	)
 	private String isbn;
 
