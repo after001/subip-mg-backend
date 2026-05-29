@@ -240,6 +240,16 @@ class CrudControllerTests {
 						"""))
 				.andExpect(status().isBadRequest())
 				.andExpect(jsonPath("$.message").value("Somente emprestimos abertos podem ser renovados."));
+
+		mockMvc.perform(delete("/pessoas/1"))
+				.andExpect(status().isBadRequest())
+				.andExpect(jsonPath("$.message")
+						.value("Nao e possivel excluir uma pessoa que possui emprestimos cadastrados."));
+
+		mockMvc.perform(delete("/exemplares/1"))
+				.andExpect(status().isBadRequest())
+				.andExpect(jsonPath("$.message")
+						.value("Nao e possivel excluir um exemplar que possui emprestimos cadastrados."));
 	}
 
 	private Long getId(String json) throws Exception {

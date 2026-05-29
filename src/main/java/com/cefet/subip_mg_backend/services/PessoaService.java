@@ -11,6 +11,7 @@ import com.cefet.subip_mg_backend.dto.PessoaResponseDTO;
 import com.cefet.subip_mg_backend.entities.Pessoa;
 import com.cefet.subip_mg_backend.exceptions.DatabaseException;
 import com.cefet.subip_mg_backend.exceptions.ResourceNotFoundException;
+import com.cefet.subip_mg_backend.repositories.EmprestimoRepository;
 import com.cefet.subip_mg_backend.repositories.PessoaRepository;
 
 @Service
@@ -18,6 +19,9 @@ public class PessoaService {
 
 	@Autowired
 	private PessoaRepository pessoaRepository;
+
+	@Autowired
+	private EmprestimoRepository emprestimoRepository;
 
 	@Transactional(readOnly = true)
 	public List<PessoaResponseDTO> listar() {
@@ -73,6 +77,10 @@ public class PessoaService {
 	public void excluir(Long id) {
 		if (!pessoaRepository.existsById(id)) {
 			throw new ResourceNotFoundException("Pessoa nao encontrada. Id: " + id);
+		}
+
+		if (emprestimoRepository.existsByPessoaId(id)) {
+			throw new DatabaseException("Nao e possivel excluir uma pessoa que possui emprestimos cadastrados.");
 		}
 
 		pessoaRepository.deleteById(id);

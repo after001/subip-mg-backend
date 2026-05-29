@@ -14,6 +14,7 @@ import com.cefet.subip_mg_backend.entities.Livro;
 import com.cefet.subip_mg_backend.exceptions.DatabaseException;
 import com.cefet.subip_mg_backend.exceptions.ResourceNotFoundException;
 import com.cefet.subip_mg_backend.repositories.BibliotecaRepository;
+import com.cefet.subip_mg_backend.repositories.EmprestimoRepository;
 import com.cefet.subip_mg_backend.repositories.ExemplarRepository;
 import com.cefet.subip_mg_backend.repositories.LivroRepository;
 
@@ -28,6 +29,9 @@ public class ExemplarService {
 
 	@Autowired
 	private BibliotecaRepository bibliotecaRepository;
+
+	@Autowired
+	private EmprestimoRepository emprestimoRepository;
 
 	@Transactional(readOnly = true)
 	public List<ExemplarResponseDTO> listar() {
@@ -75,6 +79,10 @@ public class ExemplarService {
 	public void excluir(Long id) {
 		if (!exemplarRepository.existsById(id)) {
 			throw new ResourceNotFoundException("Exemplar nao encontrado. Id: " + id);
+		}
+
+		if (emprestimoRepository.existsByExemplarId(id)) {
+			throw new DatabaseException("Nao e possivel excluir um exemplar que possui emprestimos cadastrados.");
 		}
 
 		exemplarRepository.deleteById(id);
