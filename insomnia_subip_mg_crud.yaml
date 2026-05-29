@@ -1,13 +1,13 @@
 _type: export
 __export_format: 4
-__export_date: 2026-05-28T11:00:00.000Z
+__export_date: 2026-05-29T13:00:00.000Z
 __export_source: insomnia.desktop.app:v2023.5.8
 resources:
   - _id: wrk_subip_mg_crud
     parentId: null
     modified: 1780000000000
     created: 1780000000000
-    name: SUBiP-MG - CRUD Basico
+    name: SUBiP-MG - CRUD e Emprestimos
     description: ""
     scope: collection
     _type: workspace
@@ -579,6 +579,325 @@ resources:
     settingRebuildPath: true
     settingFollowRedirects: global
     _type: request
+  - _id: fld_subip_emprestimo
+    parentId: wrk_subip_mg_crud
+    modified: 1780000000060
+    created: 1780000000060
+    name: Emprestimo
+    description: ""
+    environment: {}
+    environmentPropertyOrder: null
+    metaSortKey: 0
+    _type: request_group
+  - _id: req_subip_emprestimo_listar
+    parentId: fld_subip_emprestimo
+    modified: 1780000000061
+    created: 1780000000061
+    url: http://localhost:8080/emprestimos
+    name: Listar
+    description: ""
+    method: GET
+    body: {}
+    parameters: []
+    headers:
+      - name: User-Agent
+        value: insomnia/2023.5.8
+    authentication: {}
+    metaSortKey: -500
+    isPrivate: false
+    settingStoreCookies: true
+    settingSendCookies: true
+    settingDisableRenderRequestBody: false
+    settingEncodeUrl: true
+    settingRebuildPath: true
+    settingFollowRedirects: global
+    _type: request
+  - _id: req_subip_emprestimo_buscar
+    parentId: fld_subip_emprestimo
+    modified: 1780000000062
+    created: 1780000000062
+    url: http://localhost:8080/emprestimos/1
+    name: Buscar por ID
+    description: ""
+    method: GET
+    body: {}
+    parameters: []
+    headers:
+      - name: User-Agent
+        value: insomnia/2023.5.8
+    authentication: {}
+    metaSortKey: -400
+    isPrivate: false
+    settingStoreCookies: true
+    settingSendCookies: true
+    settingDisableRenderRequestBody: false
+    settingEncodeUrl: true
+    settingRebuildPath: true
+    settingFollowRedirects: global
+    _type: request
+  - _id: req_subip_emprestimo_registrar
+    parentId: fld_subip_emprestimo
+    modified: 1780000000063
+    created: 1780000000063
+    url: http://localhost:8080/emprestimos
+    name: Registrar
+    description: "Registra emprestimo apenas se o exemplar estiver DISPONIVEL. Ao registrar, o exemplar muda para EMPRESTADO."
+    method: POST
+    body:
+      mimeType: application/json
+      text: |-
+        {
+          "dataRetirada": "2026-05-28",
+          "dataDevolucaoPrevista": "2026-06-04",
+          "exemplarId": 1,
+          "pessoaId": 1
+        }
+    parameters: []
+    headers:
+      - name: Content-Type
+        value: application/json
+      - name: User-Agent
+        value: insomnia/2023.5.8
+    authentication: {}
+    metaSortKey: -300
+    isPrivate: false
+    settingStoreCookies: true
+    settingSendCookies: true
+    settingDisableRenderRequestBody: false
+    settingEncodeUrl: true
+    settingRebuildPath: true
+    settingFollowRedirects: global
+    _type: request
+  - _id: req_subip_emprestimo_renovar
+    parentId: fld_subip_emprestimo
+    modified: 1780000000064
+    created: 1780000000064
+    url: http://localhost:8080/emprestimos/1/renovacao
+    name: Renovar
+    description: "Renova somente emprestimo aberto e atualiza a data de devolucao prevista."
+    method: PUT
+    body:
+      mimeType: application/json
+      text: |-
+        {
+          "dataDevolucaoPrevista": "2026-06-11"
+        }
+    parameters: []
+    headers:
+      - name: Content-Type
+        value: application/json
+      - name: User-Agent
+        value: insomnia/2023.5.8
+    authentication: {}
+    metaSortKey: -200
+    isPrivate: false
+    settingStoreCookies: true
+    settingSendCookies: true
+    settingDisableRenderRequestBody: false
+    settingEncodeUrl: true
+    settingRebuildPath: true
+    settingFollowRedirects: global
+    _type: request
+  - _id: req_subip_emprestimo_devolver
+    parentId: fld_subip_emprestimo
+    modified: 1780000000065
+    created: 1780000000065
+    url: http://localhost:8080/emprestimos/1/devolucao
+    name: Devolver
+    description: "Registra a devolucao, muda o emprestimo para DEVOLVIDO e libera o exemplar como DISPONIVEL."
+    method: PUT
+    body:
+      mimeType: application/json
+      text: |-
+        {
+          "dataDevolucao": "2026-06-13"
+        }
+    parameters: []
+    headers:
+      - name: Content-Type
+        value: application/json
+      - name: User-Agent
+        value: insomnia/2023.5.8
+    authentication: {}
+    metaSortKey: -100
+    isPrivate: false
+    settingStoreCookies: true
+    settingSendCookies: true
+    settingDisableRenderRequestBody: false
+    settingEncodeUrl: true
+    settingRebuildPath: true
+    settingFollowRedirects: global
+    _type: request
+  - _id: fld_subip_validacoes
+    parentId: wrk_subip_mg_crud
+    modified: 1780000000070
+    created: 1780000000070
+    name: Validacoes e Erros
+    description: ""
+    environment: {}
+    environmentPropertyOrder: null
+    metaSortKey: 100
+    _type: request_group
+  - _id: req_subip_validacao_cpf_duplicado
+    parentId: fld_subip_validacoes
+    modified: 1780000000071
+    created: 1780000000071
+    url: http://localhost:8080/pessoas
+    name: CPF duplicado
+    description: "Erro esperado: CPF ja cadastrado."
+    method: POST
+    body:
+      mimeType: application/json
+      text: |-
+        {
+          "nome": "Pessoa CPF Repetido",
+          "cpf": "11111111111",
+          "email": "cpf.repetido@email.com"
+        }
+    parameters: []
+    headers:
+      - name: Content-Type
+        value: application/json
+      - name: User-Agent
+        value: insomnia/2023.5.8
+    authentication: {}
+    metaSortKey: -500
+    isPrivate: false
+    settingStoreCookies: true
+    settingSendCookies: true
+    settingDisableRenderRequestBody: false
+    settingEncodeUrl: true
+    settingRebuildPath: true
+    settingFollowRedirects: global
+    _type: request
+  - _id: req_subip_validacao_isbn_invalido
+    parentId: fld_subip_validacoes
+    modified: 1780000000072
+    created: 1780000000072
+    url: http://localhost:8080/livros
+    name: ISBN invalido
+    description: "Erro esperado: ISBN fora do formato aceito."
+    method: POST
+    body:
+      mimeType: application/json
+      text: |-
+        {
+          "titulo": "Livro com ISBN invalido",
+          "isbn": "978-85-359-0277-7"
+        }
+    parameters: []
+    headers:
+      - name: Content-Type
+        value: application/json
+      - name: User-Agent
+        value: insomnia/2023.5.8
+    authentication: {}
+    metaSortKey: -400
+    isPrivate: false
+    settingStoreCookies: true
+    settingSendCookies: true
+    settingDisableRenderRequestBody: false
+    settingEncodeUrl: true
+    settingRebuildPath: true
+    settingFollowRedirects: global
+    _type: request
+  - _id: req_subip_validacao_isbn_formatado
+    parentId: fld_subip_validacoes
+    modified: 1780000000073
+    created: 1780000000073
+    url: http://localhost:8080/livros
+    name: ISBN formatado valido
+    description: "Formato aceito: 13 digitos ou 17 caracteres com pontos e hifens no padrao 978.85.359-0277-7."
+    method: POST
+    body:
+      mimeType: application/json
+      text: |-
+        {
+          "titulo": "Livro com ISBN formatado",
+          "isbn": "978.85.359-0277-7"
+        }
+    parameters: []
+    headers:
+      - name: Content-Type
+        value: application/json
+      - name: User-Agent
+        value: insomnia/2023.5.8
+    authentication: {}
+    metaSortKey: -300
+    isPrivate: false
+    settingStoreCookies: true
+    settingSendCookies: true
+    settingDisableRenderRequestBody: false
+    settingEncodeUrl: true
+    settingRebuildPath: true
+    settingFollowRedirects: global
+    _type: request
+  - _id: req_subip_validacao_tombo_duplicado
+    parentId: fld_subip_validacoes
+    modified: 1780000000074
+    created: 1780000000074
+    url: http://localhost:8080/exemplares
+    name: Tombo duplicado
+    description: "Erro esperado: tombo ja cadastrado."
+    method: POST
+    body:
+      mimeType: application/json
+      text: |-
+        {
+          "tombo": "TOMBO-0001",
+          "situacao": "DISPONIVEL",
+          "livroId": 1,
+          "bibliotecaId": 1
+        }
+    parameters: []
+    headers:
+      - name: Content-Type
+        value: application/json
+      - name: User-Agent
+        value: insomnia/2023.5.8
+    authentication: {}
+    metaSortKey: -200
+    isPrivate: false
+    settingStoreCookies: true
+    settingSendCookies: true
+    settingDisableRenderRequestBody: false
+    settingEncodeUrl: true
+    settingRebuildPath: true
+    settingFollowRedirects: global
+    _type: request
+  - _id: req_subip_validacao_exemplar_indisponivel
+    parentId: fld_subip_validacoes
+    modified: 1780000000075
+    created: 1780000000075
+    url: http://localhost:8080/emprestimos
+    name: Emprestar exemplar indisponivel
+    description: "Erro esperado: so e permitido emprestar exemplar DISPONIVEL. O exemplar 2 vem como EMPRESTADO no import.sql."
+    method: POST
+    body:
+      mimeType: application/json
+      text: |-
+        {
+          "dataRetirada": "2026-05-28",
+          "dataDevolucaoPrevista": "2026-06-04",
+          "exemplarId": 2,
+          "pessoaId": 1
+        }
+    parameters: []
+    headers:
+      - name: Content-Type
+        value: application/json
+      - name: User-Agent
+        value: insomnia/2023.5.8
+    authentication: {}
+    metaSortKey: -100
+    isPrivate: false
+    settingStoreCookies: true
+    settingSendCookies: true
+    settingDisableRenderRequestBody: false
+    settingEncodeUrl: true
+    settingRebuildPath: true
+    settingFollowRedirects: global
+    _type: request
   - _id: env_subip_mg_base
     parentId: wrk_subip_mg_crud
     modified: 1780000000050
@@ -601,7 +920,7 @@ resources:
     parentId: wrk_subip_mg_crud
     modified: 1780000000052
     created: 1780000000052
-    fileName: SUBiP-MG - CRUD Basico
+    fileName: SUBiP-MG - CRUD e Emprestimos
     contents: ""
     contentType: yaml
     _type: api_spec

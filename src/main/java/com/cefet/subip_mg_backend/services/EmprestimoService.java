@@ -6,7 +6,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.cefet.subip_mg_backend.dto.EmprestimoDevolucaoRequestDTO;
 import com.cefet.subip_mg_backend.dto.EmprestimoRequestDTO;
+import com.cefet.subip_mg_backend.dto.EmprestimoRenovacaoRequestDTO;
 import com.cefet.subip_mg_backend.dto.EmprestimoResponseDTO;
 import com.cefet.subip_mg_backend.entities.Emprestimo;
 import com.cefet.subip_mg_backend.entities.Exemplar;
@@ -46,6 +48,25 @@ public class EmprestimoService {
 	}
 
 	@Transactional
+	public EmprestimoResponseDTO devolver(Long id, EmprestimoDevolucaoRequestDTO dto) {
+		Emprestimo entity = buscarEntidadePorId(id);
+
+		if (!emprestimoAberto(entity)) {
+			throw new DatabaseException("Somente emprestimos abertos podem ser devolvidos.");
+		}
+
+		if (dto.getDataDevolucao() != null && dto.getDataDevolucao().isBefore(entity.getDataRetirada())) {
+			throw new DatabaseException("A data de devolucao nao pode ser anterior a data de retirada.");
+		}
+
+		entity.setDataDevolucao(dto.getDataDevolucao());
+		entity.setSituacao(SituacaoEmprestimo.DEVOLVIDO);
+		entity.getExemplar().setSituacao(SituacaoExemplar.DISPONIVEL);
+
+		return new EmprestimoResponseDTO(entity);
+	}
+
+	@Transactional
 	public EmprestimoResponseDTO registrar(EmprestimoRequestDTO dto) {
 		validarDatas(dto);
 
@@ -73,11 +94,39 @@ public class EmprestimoService {
 		return new EmprestimoResponseDTO(entity);
 	}
 
+	@Transactional
+	public EmprestimoResponseDTO renovar(Long id, EmprestimoRenovacaoRequestDTO dto) {
+		Emprestimo entity = buscarEntidadePorId(id);
+
+		if (!emprestimoAberto(entity)) {
+			throw new DatabaseException("Somente emprestimos abertos podem ser renovados.");
+		}
+
+		if (dto.getDataDevolucaoPrevista() != null
+				&& !dto.getDataDevolucaoPrevista().isAfter(entity.getDataDevolucaoPrevista())) {
+			throw new DatabaseException("A nova data de devolucao prevista deve ser posterior a data atual prevista.");
+		}
+
+		entity.setDataDevolucaoPrevista(dto.getDataDevolucaoPrevista());
+		entity.setSituacao(SituacaoEmprestimo.RENOVADO);
+
+		return new EmprestimoResponseDTO(entity);
+	}
+
 	private void validarDatas(EmprestimoRequestDTO dto) {
 		if (dto.getDataRetirada() != null
 				&& dto.getDataDevolucaoPrevista() != null
 				&& dto.getDataDevolucaoPrevista().isBefore(dto.getDataRetirada())) {
 			throw new DatabaseException("A data de devolucao prevista nao pode ser anterior a data de retirada.");
 		}
+	}
+
+	private Emprestimo buscarEntidadePorId(Long id) {
+		return emprestimoRepository.findById(id)
+				.orElseThrow(() -> new ResourceNotFoundException("Emprestimo nao encontrado. Id: " + id));
+	}
+
+	private boolean emprestimoAberto(Emprestimo entity) {
+		return entity.getDataDevolucao() == null && entity.getSituacao() != SituacaoEmprestimo.DEVOLVIDO;
 	}
 }
