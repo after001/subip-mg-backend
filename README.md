@@ -1,0 +1,130 @@
+# SUBiP-MG Backend
+
+Backend em Spring Boot para o Sistema Unico de Bibliotecas Publicas de Minas Gerais.
+
+## Tecnologias
+
+- Java 21
+- Spring Boot
+- Spring Web
+- Spring Data JPA
+- Bean Validation
+- MySQL
+- Maven
+
+## Como executar
+
+Configure o banco MySQL conforme `src/main/resources/application.properties` e execute:
+
+```bash
+mvn spring-boot:run
+```
+
+A API usa a base:
+
+```text
+http://localhost:8080
+```
+
+## Entidades principais
+
+- Pessoa
+- Livro
+- Biblioteca
+- Exemplar
+- Emprestimo
+
+## Endpoints CRUD
+
+| Metodo | Rota | Descricao |
+| --- | --- | --- |
+| GET | `/pessoas` | Lista pessoas |
+| GET | `/pessoas/{id}` | Busca pessoa por id |
+| POST | `/pessoas` | Cadastra pessoa |
+| PUT | `/pessoas/{id}` | Altera pessoa |
+| DELETE | `/pessoas/{id}` | Exclui pessoa, se nao houver emprestimos vinculados |
+| GET | `/livros` | Lista livros, com filtros opcionais por titulo e ISBN |
+| GET | `/livros/{id}` | Busca livro por id |
+| POST | `/livros` | Cadastra livro |
+| PUT | `/livros/{id}` | Altera livro |
+| DELETE | `/livros/{id}` | Exclui livro, se nao houver exemplares vinculados |
+| GET | `/bibliotecas` | Lista bibliotecas |
+| GET | `/bibliotecas/{id}` | Busca biblioteca por id |
+| POST | `/bibliotecas` | Cadastra biblioteca |
+| PUT | `/bibliotecas/{id}` | Altera biblioteca |
+| DELETE | `/bibliotecas/{id}` | Exclui biblioteca, se nao houver exemplares vinculados |
+| GET | `/exemplares` | Lista exemplares |
+| GET | `/exemplares/{id}` | Busca exemplar por id |
+| POST | `/exemplares` | Cadastra exemplar |
+| PUT | `/exemplares/{id}` | Altera exemplar |
+| DELETE | `/exemplares/{id}` | Exclui exemplar, se nao houver emprestimos vinculados |
+
+## Endpoints de emprestimo
+
+| Metodo | Rota | Descricao |
+| --- | --- | --- |
+| GET | `/emprestimos` | Lista emprestimos |
+| GET | `/emprestimos/{id}` | Busca emprestimo por id |
+| POST | `/emprestimos` | Registra emprestimo de exemplar disponivel |
+| PUT | `/emprestimos/{id}/renovacao` | Renova emprestimo aberto e atualiza a data prevista |
+| PUT | `/emprestimos/{id}/devolucao` | Registra devolucao e libera o exemplar |
+
+## Endpoints de consulta
+
+| Metodo | Rota | Descricao |
+| --- | --- | --- |
+| GET | `/acervo` | Lista acervo com livro, exemplar, biblioteca e situacao |
+| GET | `/acervo?titulo=dom` | Filtra acervo pelo titulo do livro |
+| GET | `/acervo?bibliotecaId=1` | Filtra acervo pela biblioteca |
+| GET | `/acervo?situacao=DISPONIVEL` | Filtra acervo pela situacao do exemplar |
+| GET | `/livros?titulo=dom` | Busca livros por titulo |
+| GET | `/livros?isbn=9788535910663` | Busca livros por ISBN |
+| GET | `/pessoas/{id}/emprestimos` | Lista emprestimos de uma pessoa |
+| GET | `/livros/{id}/exemplares` | Lista exemplares de um livro |
+
+## Exemplos de JSON
+
+Cadastro de pessoa:
+
+```json
+{
+  "nome": "Diego Costa",
+  "cpf": "44444444444",
+  "email": "diego.costa@email.com"
+}
+```
+
+Registro de emprestimo:
+
+```json
+{
+  "dataRetirada": "2026-05-28",
+  "dataDevolucaoPrevista": "2026-06-04",
+  "exemplarId": 1,
+  "pessoaId": 1
+}
+```
+
+Renovacao:
+
+```json
+{
+  "dataDevolucaoPrevista": "2026-06-11"
+}
+```
+
+Devolucao:
+
+```json
+{
+  "dataDevolucao": "2026-06-13"
+}
+```
+
+## Insomnia
+
+A collection esta em:
+
+```text
+insomnia_subip_mg_crud.yaml
+```

@@ -11,6 +11,108 @@ resources:
     description: ""
     scope: collection
     _type: workspace
+  - _id: fld_subip_acervo
+    parentId: wrk_subip_mg_crud
+    modified: 1780000000080
+    created: 1780000000080
+    name: Acervo
+    description: ""
+    environment: {}
+    environmentPropertyOrder: null
+    metaSortKey: -500
+    _type: request_group
+  - _id: req_subip_acervo_listar
+    parentId: fld_subip_acervo
+    modified: 1780000000081
+    created: 1780000000081
+    url: http://localhost:8080/acervo
+    name: Listar acervo
+    description: "Lista o acervo a partir dos exemplares, trazendo livro, biblioteca e situacao."
+    method: GET
+    body: {}
+    parameters: []
+    headers:
+      - name: User-Agent
+        value: insomnia/2023.5.8
+    authentication: {}
+    metaSortKey: -500
+    isPrivate: false
+    settingStoreCookies: true
+    settingSendCookies: true
+    settingDisableRenderRequestBody: false
+    settingEncodeUrl: true
+    settingRebuildPath: true
+    settingFollowRedirects: global
+    _type: request
+  - _id: req_subip_acervo_por_titulo
+    parentId: fld_subip_acervo
+    modified: 1780000000082
+    created: 1780000000082
+    url: http://localhost:8080/acervo?titulo=dom
+    name: Buscar por titulo
+    description: ""
+    method: GET
+    body: {}
+    parameters: []
+    headers:
+      - name: User-Agent
+        value: insomnia/2023.5.8
+    authentication: {}
+    metaSortKey: -400
+    isPrivate: false
+    settingStoreCookies: true
+    settingSendCookies: true
+    settingDisableRenderRequestBody: false
+    settingEncodeUrl: true
+    settingRebuildPath: true
+    settingFollowRedirects: global
+    _type: request
+  - _id: req_subip_acervo_por_biblioteca
+    parentId: fld_subip_acervo
+    modified: 1780000000083
+    created: 1780000000083
+    url: http://localhost:8080/acervo?bibliotecaId=1
+    name: Buscar por biblioteca
+    description: ""
+    method: GET
+    body: {}
+    parameters: []
+    headers:
+      - name: User-Agent
+        value: insomnia/2023.5.8
+    authentication: {}
+    metaSortKey: -300
+    isPrivate: false
+    settingStoreCookies: true
+    settingSendCookies: true
+    settingDisableRenderRequestBody: false
+    settingEncodeUrl: true
+    settingRebuildPath: true
+    settingFollowRedirects: global
+    _type: request
+  - _id: req_subip_acervo_por_situacao
+    parentId: fld_subip_acervo
+    modified: 1780000000084
+    created: 1780000000084
+    url: http://localhost:8080/acervo?situacao=DISPONIVEL
+    name: Buscar por situacao
+    description: ""
+    method: GET
+    body: {}
+    parameters: []
+    headers:
+      - name: User-Agent
+        value: insomnia/2023.5.8
+    authentication: {}
+    metaSortKey: -200
+    isPrivate: false
+    settingStoreCookies: true
+    settingSendCookies: true
+    settingDisableRenderRequestBody: false
+    settingEncodeUrl: true
+    settingRebuildPath: true
+    settingFollowRedirects: global
+    _type: request
   - _id: fld_subip_pessoa
     parentId: wrk_subip_mg_crud
     modified: 1780000000001
@@ -154,6 +256,29 @@ resources:
     settingRebuildPath: true
     settingFollowRedirects: global
     _type: request
+  - _id: req_subip_pessoa_emprestimos
+    parentId: fld_subip_pessoa
+    modified: 1780000000085
+    created: 1780000000085
+    url: http://localhost:8080/pessoas/1/emprestimos
+    name: Emprestimos da pessoa
+    description: "Lista os emprestimos vinculados a uma pessoa."
+    method: GET
+    body: {}
+    parameters: []
+    headers:
+      - name: User-Agent
+        value: insomnia/2023.5.8
+    authentication: {}
+    metaSortKey: -50
+    isPrivate: false
+    settingStoreCookies: true
+    settingSendCookies: true
+    settingDisableRenderRequestBody: false
+    settingEncodeUrl: true
+    settingRebuildPath: true
+    settingFollowRedirects: global
+    _type: request
   - _id: fld_subip_livro
     parentId: wrk_subip_mg_crud
     modified: 1780000000020
@@ -202,6 +327,75 @@ resources:
         value: insomnia/2023.5.8
     authentication: {}
     metaSortKey: -400
+    isPrivate: false
+    settingStoreCookies: true
+    settingSendCookies: true
+    settingDisableRenderRequestBody: false
+    settingEncodeUrl: true
+    settingRebuildPath: true
+    settingFollowRedirects: global
+    _type: request
+  - _id: req_subip_livro_buscar_titulo
+    parentId: fld_subip_livro
+    modified: 1780000000086
+    created: 1780000000086
+    url: http://localhost:8080/livros?titulo=dom
+    name: Buscar por titulo
+    description: ""
+    method: GET
+    body: {}
+    parameters: []
+    headers:
+      - name: User-Agent
+        value: insomnia/2023.5.8
+    authentication: {}
+    metaSortKey: -350
+    isPrivate: false
+    settingStoreCookies: true
+    settingSendCookies: true
+    settingDisableRenderRequestBody: false
+    settingEncodeUrl: true
+    settingRebuildPath: true
+    settingFollowRedirects: global
+    _type: request
+  - _id: req_subip_livro_buscar_isbn
+    parentId: fld_subip_livro
+    modified: 1780000000087
+    created: 1780000000087
+    url: http://localhost:8080/livros?isbn=9788535910663
+    name: Buscar por ISBN
+    description: ""
+    method: GET
+    body: {}
+    parameters: []
+    headers:
+      - name: User-Agent
+        value: insomnia/2023.5.8
+    authentication: {}
+    metaSortKey: -325
+    isPrivate: false
+    settingStoreCookies: true
+    settingSendCookies: true
+    settingDisableRenderRequestBody: false
+    settingEncodeUrl: true
+    settingRebuildPath: true
+    settingFollowRedirects: global
+    _type: request
+  - _id: req_subip_livro_exemplares
+    parentId: fld_subip_livro
+    modified: 1780000000088
+    created: 1780000000088
+    url: http://localhost:8080/livros/1/exemplares
+    name: Exemplares do livro
+    description: "Lista os exemplares cadastrados para um livro."
+    method: GET
+    body: {}
+    parameters: []
+    headers:
+      - name: User-Agent
+        value: insomnia/2023.5.8
+    authentication: {}
+    metaSortKey: -310
     isPrivate: false
     settingStoreCookies: true
     settingSendCookies: true

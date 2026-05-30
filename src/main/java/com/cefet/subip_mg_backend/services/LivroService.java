@@ -6,8 +6,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.cefet.subip_mg_backend.dto.ExemplarResponseDTO;
 import com.cefet.subip_mg_backend.dto.LivroRequestDTO;
 import com.cefet.subip_mg_backend.dto.LivroResponseDTO;
+import com.cefet.subip_mg_backend.entities.Exemplar;
 import com.cefet.subip_mg_backend.entities.Livro;
 import com.cefet.subip_mg_backend.exceptions.DatabaseException;
 import com.cefet.subip_mg_backend.exceptions.ResourceNotFoundException;
@@ -24,8 +26,8 @@ public class LivroService {
 	private ExemplarRepository exemplarRepository;
 
 	@Transactional(readOnly = true)
-	public List<LivroResponseDTO> listar() {
-		List<Livro> lista = livroRepository.findAll();
+	public List<LivroResponseDTO> listar(String titulo, String isbn) {
+		List<Livro> lista = livroRepository.buscarPorFiltros(normalizarTexto(titulo), normalizarTexto(isbn));
 		return lista.stream().map(LivroResponseDTO::new).toList();
 	}
 
@@ -35,6 +37,17 @@ public class LivroService {
 				.orElseThrow(() -> new ResourceNotFoundException("Livro nao encontrado. Id: " + id));
 
 		return new LivroResponseDTO(entity);
+	}
+
+	@Transactional(readOnly = true)
+	public List<ExemplarResponseDTO> listarExemplares(Long id) {
+		// Diferencia livro inexistente de livro existente sem exemplares.
+		if (!livroRepository.existsById(id)) {
+			throw new ResourceNotFoundException("Livro nao encontrado. Id: " + id);
+		}
+
+		List<Exemplar> lista = exemplarRepository.findByLivroId(id);
+		return lista.stream().map(ExemplarResponseDTO::new).toList();
 	}
 
 	@Transactional
@@ -81,5 +94,13 @@ public class LivroService {
 	private void copiarDtoParaEntidade(LivroRequestDTO dto, Livro entity) {
 		entity.setTitulo(dto.getTitulo());
 		entity.setIsbn(dto.getIsbn());
+	}
+
+	private String normalizarTexto(String valor) {
+		if (valor == null || valor.isBlank()) {
+			return null;
+		}
+
+		return valor.trim();
 	}
 }

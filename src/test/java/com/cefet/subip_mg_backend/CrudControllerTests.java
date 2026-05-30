@@ -33,6 +33,39 @@ class CrudControllerTests {
 				.andExpect(status().isOk())
 				.andExpect(jsonPath("$.length()").value(3));
 
+		mockMvc.perform(get("/acervo"))
+				.andExpect(status().isOk())
+				.andExpect(jsonPath("$.length()").value(4))
+				.andExpect(jsonPath("$[0].titulo").value("Dom Casmurro"))
+				.andExpect(jsonPath("$[0].tombo").value("TOMBO-0001"))
+				.andExpect(jsonPath("$[0].bibliotecaNome").value("Biblioteca Publica Estadual de Minas Gerais"));
+
+		mockMvc.perform(get("/acervo").param("titulo", "dom"))
+				.andExpect(status().isOk())
+				.andExpect(jsonPath("$.length()").value(2));
+
+		mockMvc.perform(get("/acervo").param("bibliotecaId", "1"))
+				.andExpect(status().isOk())
+				.andExpect(jsonPath("$.length()").value(2));
+
+		mockMvc.perform(get("/acervo").param("situacao", "DISPONIVEL"))
+				.andExpect(status().isOk())
+				.andExpect(jsonPath("$.length()").value(2));
+
+		mockMvc.perform(get("/livros").param("titulo", "dom"))
+				.andExpect(status().isOk())
+				.andExpect(jsonPath("$.length()").value(1))
+				.andExpect(jsonPath("$[0].titulo").value("Dom Casmurro"));
+
+		mockMvc.perform(get("/livros").param("isbn", "9788535910663"))
+				.andExpect(status().isOk())
+				.andExpect(jsonPath("$.length()").value(1))
+				.andExpect(jsonPath("$[0].isbn").value("9788535910663"));
+
+		mockMvc.perform(get("/livros/1/exemplares"))
+				.andExpect(status().isOk())
+				.andExpect(jsonPath("$.length()").value(2));
+
 		String pessoaJson = """
 				{
 					"nome": "Diego Costa",
@@ -182,6 +215,11 @@ class CrudControllerTests {
 				.getContentAsString();
 
 		Long emprestimoId = getId(emprestimoResponse);
+
+		mockMvc.perform(get("/pessoas/1/emprestimos"))
+				.andExpect(status().isOk())
+				.andExpect(jsonPath("$.length()").value(1))
+				.andExpect(jsonPath("$[0].id").value(emprestimoId));
 
 		mockMvc.perform(get("/emprestimos/{id}", emprestimoId))
 				.andExpect(status().isOk())

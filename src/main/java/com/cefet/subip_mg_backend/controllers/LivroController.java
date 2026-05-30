@@ -12,8 +12,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.cefet.subip_mg_backend.dto.ExemplarResponseDTO;
 import com.cefet.subip_mg_backend.dto.LivroRequestDTO;
 import com.cefet.subip_mg_backend.dto.LivroResponseDTO;
 import com.cefet.subip_mg_backend.services.LivroService;
@@ -28,8 +30,10 @@ public class LivroController {
 	private LivroService livroService;
 
 	@GetMapping
-	public ResponseEntity<List<LivroResponseDTO>> listar() {
-		List<LivroResponseDTO> lista = livroService.listar();
+	public ResponseEntity<List<LivroResponseDTO>> listar(
+			@RequestParam(required = false) String titulo,
+			@RequestParam(required = false) String isbn) {
+		List<LivroResponseDTO> lista = livroService.listar(titulo, isbn);
 		return ResponseEntity.status(HttpStatus.OK).body(lista);
 	}
 
@@ -37,6 +41,12 @@ public class LivroController {
 	public ResponseEntity<LivroResponseDTO> buscar(@PathVariable Long id) {
 		LivroResponseDTO dto = livroService.buscarPorId(id);
 		return ResponseEntity.status(HttpStatus.OK).body(dto);
+	}
+
+	@GetMapping("/{id}/exemplares")
+	public ResponseEntity<List<ExemplarResponseDTO>> listarExemplares(@PathVariable Long id) {
+		List<ExemplarResponseDTO> lista = livroService.listarExemplares(id);
+		return ResponseEntity.status(HttpStatus.OK).body(lista);
 	}
 
 	@PostMapping

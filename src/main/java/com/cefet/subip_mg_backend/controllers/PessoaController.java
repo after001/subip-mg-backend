@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.cefet.subip_mg_backend.dto.EmprestimoResponseDTO;
 import com.cefet.subip_mg_backend.dto.PessoaRequestDTO;
 import com.cefet.subip_mg_backend.dto.PessoaResponseDTO;
 import com.cefet.subip_mg_backend.services.PessoaService;
@@ -37,6 +38,12 @@ public class PessoaController {
 	public ResponseEntity<PessoaResponseDTO> buscar(@PathVariable Long id) {
 		PessoaResponseDTO dto = pessoaService.buscarPorId(id);
 		return ResponseEntity.status(HttpStatus.OK).body(dto);
+	}
+
+	@GetMapping("/{id}/emprestimos")
+	public ResponseEntity<List<EmprestimoResponseDTO>> listarEmprestimos(@PathVariable Long id) {
+		List<EmprestimoResponseDTO> lista = pessoaService.listarEmprestimos(id);
+		return ResponseEntity.status(HttpStatus.OK).body(lista);
 	}
 
 	@PostMapping
