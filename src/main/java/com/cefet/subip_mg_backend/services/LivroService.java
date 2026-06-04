@@ -10,10 +10,12 @@ import com.cefet.subip_mg_backend.dto.ExemplarResponseDTO;
 import com.cefet.subip_mg_backend.dto.LivroRequestDTO;
 import com.cefet.subip_mg_backend.dto.LivroResponseDTO;
 import com.cefet.subip_mg_backend.entities.Exemplar;
+import com.cefet.subip_mg_backend.entities.Genero;
 import com.cefet.subip_mg_backend.entities.Livro;
 import com.cefet.subip_mg_backend.exceptions.DatabaseException;
 import com.cefet.subip_mg_backend.exceptions.ResourceNotFoundException;
 import com.cefet.subip_mg_backend.repositories.ExemplarRepository;
+import com.cefet.subip_mg_backend.repositories.GeneroRepository;
 import com.cefet.subip_mg_backend.repositories.LivroRepository;
 
 @Service
@@ -24,6 +26,9 @@ public class LivroService {
 
 	@Autowired
 	private ExemplarRepository exemplarRepository;
+
+	@Autowired
+	private GeneroRepository generoRepository;
 
 	@Transactional(readOnly = true)
 	public List<LivroResponseDTO> listar(String titulo, String isbn) {
@@ -92,8 +97,12 @@ public class LivroService {
 	}
 
 	private void copiarDtoParaEntidade(LivroRequestDTO dto, Livro entity) {
+		Genero genero = generoRepository.findById(dto.getGeneroId())
+				.orElseThrow(() -> new ResourceNotFoundException("Genero nao encontrado. Id: " + dto.getGeneroId()));
+
 		entity.setTitulo(dto.getTitulo());
 		entity.setIsbn(dto.getIsbn());
+		entity.setGenero(genero);
 	}
 
 	private String normalizarTexto(String valor) {

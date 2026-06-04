@@ -10,6 +10,7 @@ import com.cefet.subip_mg_backend.entities.Livro;
 
 public interface LivroRepository extends JpaRepository<Livro, Long> {
 	boolean existsByIsbn(String isbn);
+	boolean existsByGeneroId(Long generoId);
 
 	// Mantem a listagem e a busca de catalogo no mesmo endpoint.
 	@Query("""

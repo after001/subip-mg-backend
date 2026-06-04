@@ -15,6 +15,7 @@ import com.cefet.subip_mg_backend.exceptions.DatabaseException;
 import com.cefet.subip_mg_backend.exceptions.ResourceNotFoundException;
 import com.cefet.subip_mg_backend.repositories.EmprestimoRepository;
 import com.cefet.subip_mg_backend.repositories.PessoaRepository;
+import com.cefet.subip_mg_backend.repositories.ReservaRepository;
 
 @Service
 public class PessoaService {
@@ -24,6 +25,9 @@ public class PessoaService {
 
 	@Autowired
 	private EmprestimoRepository emprestimoRepository;
+
+	@Autowired
+	private ReservaRepository reservaRepository;
 
 	@Transactional(readOnly = true)
 	public List<PessoaResponseDTO> listar() {
@@ -94,6 +98,10 @@ public class PessoaService {
 
 		if (emprestimoRepository.existsByPessoaId(id)) {
 			throw new DatabaseException("Nao e possivel excluir uma pessoa que possui emprestimos cadastrados.");
+		}
+
+		if (reservaRepository.existsByPessoaId(id)) {
+			throw new DatabaseException("Nao e possivel excluir uma pessoa que possui reservas cadastradas.");
 		}
 
 		pessoaRepository.deleteById(id);

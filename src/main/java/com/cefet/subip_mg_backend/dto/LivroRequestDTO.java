@@ -1,6 +1,7 @@
 package com.cefet.subip_mg_backend.dto;
 
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
@@ -17,12 +18,16 @@ public class LivroRequestDTO {
 	)
 	private String isbn;
 
+	@NotNull(message = "O generoId e obrigatorio.")
+	private Long generoId;
+
 	public LivroRequestDTO() {
 	}
 
-	public LivroRequestDTO(String titulo, String isbn) {
+	public LivroRequestDTO(String titulo, String isbn, Long generoId) {
 		this.titulo = titulo;
 		this.isbn = isbn;
+		this.generoId = generoId;
 	}
 
 	public String getTitulo() {
@@ -39,5 +44,13 @@ public class LivroRequestDTO {
 
 	public void setIsbn(String isbn) {
 		this.isbn = isbn;
+	}
+
+	public Long getGeneroId() {
+		return generoId;
+	}
+
+	public void setGeneroId(Long generoId) {
+		this.generoId = generoId;
 	}
 }

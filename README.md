@@ -29,10 +29,13 @@ http://localhost:8080
 ## Entidades principais
 
 - Pessoa
+- Genero
 - Livro
 - Biblioteca
 - Exemplar
 - Emprestimo
+- Reserva
+- Usuario
 
 ## Endpoints CRUD
 
@@ -43,6 +46,11 @@ http://localhost:8080
 | POST | `/pessoas` | Cadastra pessoa |
 | PUT | `/pessoas/{id}` | Altera pessoa |
 | DELETE | `/pessoas/{id}` | Exclui pessoa, se nao houver emprestimos vinculados |
+| GET | `/generos` | Lista generos |
+| GET | `/generos/{id}` | Busca genero por id |
+| POST | `/generos` | Cadastra genero |
+| PUT | `/generos/{id}` | Altera genero |
+| DELETE | `/generos/{id}` | Exclui genero, se nao houver livros vinculados |
 | GET | `/livros` | Lista livros, com filtros opcionais por titulo e ISBN |
 | GET | `/livros/{id}` | Busca livro por id |
 | POST | `/livros` | Cadastra livro |
@@ -69,6 +77,22 @@ http://localhost:8080
 | PUT | `/emprestimos/{id}/renovacao` | Renova emprestimo aberto e atualiza a data prevista |
 | PUT | `/emprestimos/{id}/devolucao` | Registra devolucao e libera o exemplar |
 
+## Endpoints de reserva
+
+| Metodo | Rota | Descricao |
+| --- | --- | --- |
+| GET | `/reservas` | Lista reservas |
+| GET | `/reservas/{id}` | Busca reserva por id |
+| POST | `/reservas` | Registra reserva para exemplar emprestado |
+| PUT | `/reservas/{id}/cancelamento` | Cancela uma reserva ativa |
+
+Regras principais:
+
+- So e possivel reservar exemplar `EMPRESTADO`.
+- Exemplar `INDISPONIVEL` nao pode ser reservado.
+- Uma pessoa nao pode ter duas reservas ativas para o mesmo exemplar.
+- A reserva pertence a uma pessoa e a um exemplar.
+
 ## Endpoints de consulta
 
 | Metodo | Rota | Descricao |
@@ -94,6 +118,24 @@ Cadastro de pessoa:
 }
 ```
 
+Cadastro de genero:
+
+```json
+{
+  "descricao": "Romance"
+}
+```
+
+Cadastro de livro:
+
+```json
+{
+  "titulo": "Vidas Secas",
+  "isbn": "9788535926138",
+  "generoId": 1
+}
+```
+
 Registro de emprestimo:
 
 ```json
@@ -102,6 +144,15 @@ Registro de emprestimo:
   "dataDevolucaoPrevista": "2026-06-04",
   "exemplarId": 1,
   "pessoaId": 1
+}
+```
+
+Registro de reserva:
+
+```json
+{
+  "pessoaId": 2,
+  "exemplarId": 1
 }
 ```
 

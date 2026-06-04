@@ -66,6 +66,42 @@ class CrudControllerTests {
 				.andExpect(status().isOk())
 				.andExpect(jsonPath("$.length()").value(2));
 
+		mockMvc.perform(get("/generos"))
+				.andExpect(status().isOk())
+				.andExpect(jsonPath("$.length()").value(3));
+
+		mockMvc.perform(delete("/generos/1"))
+				.andExpect(status().isBadRequest())
+				.andExpect(jsonPath("$.message")
+						.value("Nao e possivel excluir um genero que possui livros cadastrados."));
+
+		String generoJson = """
+				{
+					"descricao": "Romance Regionalista"
+				}
+				""";
+
+		String generoResponse = mockMvc.perform(post("/generos")
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(generoJson))
+				.andExpect(status().isCreated())
+				.andExpect(jsonPath("$.descricao").value("Romance Regionalista"))
+				.andReturn()
+				.getResponse()
+				.getContentAsString();
+
+		Long generoId = getId(generoResponse);
+
+		mockMvc.perform(put("/generos/{id}", generoId)
+				.contentType(MediaType.APPLICATION_JSON)
+				.content("""
+						{
+							"descricao": "Romance Social"
+						}
+						"""))
+				.andExpect(status().isOk())
+				.andExpect(jsonPath("$.descricao").value("Romance Social"));
+
 		String pessoaJson = """
 				{
 					"nome": "Diego Costa",
@@ -105,14 +141,17 @@ class CrudControllerTests {
 		String livroJson = """
 				{
 					"titulo": "Vidas Secas",
-					"isbn": "9788535926138"
+					"isbn": "9788535926138",
+					"generoId": %d
 				}
-				""";
+				""".formatted(generoId);
 
 		String livroResponse = mockMvc.perform(post("/livros")
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(livroJson))
 				.andExpect(status().isCreated())
+				.andExpect(jsonPath("$.generoId").value(generoId))
+				.andExpect(jsonPath("$.generoDescricao").value("Romance Social"))
 				.andReturn()
 				.getResponse()
 				.getContentAsString();
@@ -124,6 +163,9 @@ class CrudControllerTests {
 				.andExpect(jsonPath("$.titulo").value("Vidas Secas"));
 
 		mockMvc.perform(delete("/livros/{id}", livroId))
+				.andExpect(status().isNoContent());
+
+		mockMvc.perform(delete("/generos/{id}", generoId))
 				.andExpect(status().isNoContent());
 
 		String bibliotecaJson = """
@@ -229,6 +271,72 @@ class CrudControllerTests {
 		mockMvc.perform(get("/exemplares/1"))
 				.andExpect(status().isOk())
 				.andExpect(jsonPath("$.situacao").value("EMPRESTADO"));
+
+		mockMvc.perform(get("/reservas"))
+				.andExpect(status().isOk())
+				.andExpect(jsonPath("$.length()").value(0));
+
+		String reservaJson = """
+				{
+					"pessoaId": 2,
+					"exemplarId": 1
+				}
+				""";
+
+		String reservaResponse = mockMvc.perform(post("/reservas")
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(reservaJson))
+				.andExpect(status().isCreated())
+				.andExpect(jsonPath("$.situacao").value("ATIVA"))
+				.andExpect(jsonPath("$.dataRegistro").exists())
+				.andExpect(jsonPath("$.exemplarId").value(1))
+				.andExpect(jsonPath("$.pessoaId").value(2))
+				.andReturn()
+				.getResponse()
+				.getContentAsString();
+
+		Long reservaId = getId(reservaResponse);
+
+		mockMvc.perform(get("/reservas/{id}", reservaId))
+				.andExpect(status().isOk())
+				.andExpect(jsonPath("$.situacao").value("ATIVA"));
+
+		mockMvc.perform(post("/reservas")
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(reservaJson))
+				.andExpect(status().isBadRequest())
+				.andExpect(jsonPath("$.message").value("Pessoa ja possui reserva ativa para este exemplar."));
+
+		mockMvc.perform(post("/reservas")
+				.contentType(MediaType.APPLICATION_JSON)
+				.content("""
+						{
+							"pessoaId": 2,
+							"exemplarId": 3
+						}
+						"""))
+				.andExpect(status().isBadRequest())
+				.andExpect(jsonPath("$.message").value("So e possivel reservar exemplar emprestado."));
+
+		mockMvc.perform(post("/reservas")
+				.contentType(MediaType.APPLICATION_JSON)
+				.content("""
+						{
+							"pessoaId": 2,
+							"exemplarId": 4
+						}
+						"""))
+				.andExpect(status().isBadRequest())
+				.andExpect(jsonPath("$.message").value("Nao e possivel reservar exemplar indisponivel."));
+
+		mockMvc.perform(put("/reservas/{id}/cancelamento", reservaId))
+				.andExpect(status().isOk())
+				.andExpect(jsonPath("$.situacao").value("CANCELADA"));
+
+		mockMvc.perform(delete("/pessoas/2"))
+				.andExpect(status().isBadRequest())
+				.andExpect(jsonPath("$.message")
+						.value("Nao e possivel excluir uma pessoa que possui reservas cadastradas."));
 
 		mockMvc.perform(post("/emprestimos")
 				.contentType(MediaType.APPLICATION_JSON)

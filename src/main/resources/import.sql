@@ -3,10 +3,15 @@ INSERT INTO tb_pessoa (nome, cpf, email) VALUES ('Ana Souza', '11111111111', 'an
 INSERT INTO tb_pessoa (nome, cpf, email) VALUES ('Bruno Lima', '22222222222', 'bruno.lima@email.com');
 INSERT INTO tb_pessoa (nome, cpf, email) VALUES ('Carla Rocha', '33333333333', 'carla.rocha@email.com');
 
+-- Generos
+INSERT INTO tb_genero (descricao) VALUES ('Romance');
+INSERT INTO tb_genero (descricao) VALUES ('Realismo');
+INSERT INTO tb_genero (descricao) VALUES ('Literatura Brasileira');
+
 -- Livros
-INSERT INTO tb_livro (titulo, isbn) VALUES ('Dom Casmurro', '9788535910663');
-INSERT INTO tb_livro (titulo, isbn) VALUES ('O Cortico', '9788572326972');
-INSERT INTO tb_livro (titulo, isbn) VALUES ('Capitaes da Areia', '9788535914067');
+INSERT INTO tb_livro (titulo, isbn, genero_id) VALUES ('Dom Casmurro', '9788535910663', 1);
+INSERT INTO tb_livro (titulo, isbn, genero_id) VALUES ('O Cortico', '9788572326972', 2);
+INSERT INTO tb_livro (titulo, isbn, genero_id) VALUES ('Capitaes da Areia', '9788535914067', 3);
 
 -- Bibliotecas
 INSERT INTO tb_biblioteca (nome) VALUES ('Biblioteca Publica Estadual de Minas Gerais');

@@ -17,6 +17,7 @@ import com.cefet.subip_mg_backend.repositories.BibliotecaRepository;
 import com.cefet.subip_mg_backend.repositories.EmprestimoRepository;
 import com.cefet.subip_mg_backend.repositories.ExemplarRepository;
 import com.cefet.subip_mg_backend.repositories.LivroRepository;
+import com.cefet.subip_mg_backend.repositories.ReservaRepository;
 
 @Service
 public class ExemplarService {
@@ -32,6 +33,9 @@ public class ExemplarService {
 
 	@Autowired
 	private EmprestimoRepository emprestimoRepository;
+
+	@Autowired
+	private ReservaRepository reservaRepository;
 
 	@Transactional(readOnly = true)
 	public List<ExemplarResponseDTO> listar() {
@@ -83,6 +87,10 @@ public class ExemplarService {
 
 		if (emprestimoRepository.existsByExemplarId(id)) {
 			throw new DatabaseException("Nao e possivel excluir um exemplar que possui emprestimos cadastrados.");
+		}
+
+		if (reservaRepository.existsByExemplarId(id)) {
+			throw new DatabaseException("Nao e possivel excluir um exemplar que possui reservas cadastradas.");
 		}
 
 		exemplarRepository.deleteById(id);

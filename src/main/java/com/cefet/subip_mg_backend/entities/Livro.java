@@ -5,6 +5,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
 @Entity
@@ -20,13 +22,18 @@ public class Livro {
 	@Column(nullable = false, unique = true, length = 17)
 	private String isbn;
 
+	@ManyToOne
+	@JoinColumn(name = "genero_id", nullable = false)
+	private Genero genero;
+
 	public Livro() {
 	}
 
-	public Livro(Long id, String titulo, String isbn) {
+	public Livro(Long id, String titulo, String isbn, Genero genero) {
 		this.id = id;
 		this.titulo = titulo;
 		this.isbn = isbn;
+		this.genero = genero;
 	}
 
 	public Long getId() {
@@ -51,5 +58,13 @@ public class Livro {
 
 	public void setIsbn(String isbn) {
 		this.isbn = isbn;
+	}
+
+	public Genero getGenero() {
+		return genero;
+	}
+
+	public void setGenero(Genero genero) {
+		this.genero = genero;
 	}
 }
