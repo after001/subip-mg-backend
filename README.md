@@ -45,7 +45,12 @@ http://localhost:8080
 | GET | `/pessoas/{id}` | Busca pessoa por id |
 | POST | `/pessoas` | Cadastra pessoa |
 | PUT | `/pessoas/{id}` | Altera pessoa |
-| DELETE | `/pessoas/{id}` | Exclui pessoa, se nao houver emprestimos vinculados |
+| DELETE | `/pessoas/{id}` | Exclui pessoa, se nao houver emprestimos, reservas ou usuario vinculados |
+| GET | `/usuarios` | Lista usuarios |
+| GET | `/usuarios/{id}` | Busca usuario por id |
+| POST | `/usuarios` | Cadastra usuario vinculado a uma pessoa |
+| PUT | `/usuarios/{id}` | Altera usuario |
+| DELETE | `/usuarios/{id}` | Exclui usuario |
 | GET | `/generos` | Lista generos |
 | GET | `/generos/{id}` | Busca genero por id |
 | POST | `/generos` | Cadastra genero |
@@ -65,7 +70,24 @@ http://localhost:8080
 | GET | `/exemplares/{id}` | Busca exemplar por id |
 | POST | `/exemplares` | Cadastra exemplar |
 | PUT | `/exemplares/{id}` | Altera exemplar |
-| DELETE | `/exemplares/{id}` | Exclui exemplar, se nao houver emprestimos vinculados |
+| DELETE | `/exemplares/{id}` | Exclui exemplar, se nao houver emprestimos ou reservas vinculados |
+
+## Usuarios e perfis
+
+`Usuario` representa o perfil operacional vinculado a uma `Pessoa`. Nesta etapa ele ainda nao faz login real e nao possui senha.
+
+Perfis disponiveis:
+
+- `LEITOR`
+- `ATENDENTE`
+- `ADMIN`
+
+Regras principais:
+
+- Login deve ser unico.
+- Uma pessoa so pode ter um usuario.
+- Perfil e pessoa sao obrigatorios.
+- Senha, BCrypt, JWT e Spring Security ficam como etapa futura.
 
 ## Endpoints de emprestimo
 
@@ -123,6 +145,16 @@ Cadastro de genero:
 ```json
 {
   "descricao": "Romance"
+}
+```
+
+Cadastro de usuario:
+
+```json
+{
+  "login": "ana",
+  "perfil": "LEITOR",
+  "pessoaId": 1
 }
 ```
 

@@ -1,13 +1,13 @@
 _type: export
 __export_format: 4
-__export_date: 2026-06-03T22:10:00.000Z
+__export_date: 2026-06-03T22:35:00.000Z
 __export_source: insomnia.desktop.app:v2023.5.8
 resources:
   - _id: wrk_subip_mg_crud
     parentId: null
     modified: 1780000000000
     created: 1780000000000
-    name: SUBiP-MG - CRUD, Emprestimos e Reservas
+    name: SUBiP-MG - Backend Completo
     description: ""
     scope: collection
     _type: workspace
@@ -271,6 +271,213 @@ resources:
         value: insomnia/2023.5.8
     authentication: {}
     metaSortKey: -50
+    isPrivate: false
+    settingStoreCookies: true
+    settingSendCookies: true
+    settingDisableRenderRequestBody: false
+    settingEncodeUrl: true
+    settingRebuildPath: true
+    settingFollowRedirects: global
+    _type: request
+  - _id: fld_subip_usuario
+    parentId: wrk_subip_mg_crud
+    modified: 1780000000110
+    created: 1780000000110
+    name: Usuario
+    description: "Usuario ainda nao autentica: por enquanto organiza login e perfil vinculados a uma pessoa."
+    environment: {}
+    environmentPropertyOrder: null
+    metaSortKey: -375
+    _type: request_group
+  - _id: req_subip_usuario_listar
+    parentId: fld_subip_usuario
+    modified: 1780000000111
+    created: 1780000000111
+    url: http://localhost:8080/usuarios
+    name: Listar
+    description: ""
+    method: GET
+    body: {}
+    parameters: []
+    headers:
+      - name: User-Agent
+        value: insomnia/2023.5.8
+    authentication: {}
+    metaSortKey: -500
+    isPrivate: false
+    settingStoreCookies: true
+    settingSendCookies: true
+    settingDisableRenderRequestBody: false
+    settingEncodeUrl: true
+    settingRebuildPath: true
+    settingFollowRedirects: global
+    _type: request
+  - _id: req_subip_usuario_buscar
+    parentId: fld_subip_usuario
+    modified: 1780000000112
+    created: 1780000000112
+    url: http://localhost:8080/usuarios/1
+    name: Buscar por ID
+    description: ""
+    method: GET
+    body: {}
+    parameters: []
+    headers:
+      - name: User-Agent
+        value: insomnia/2023.5.8
+    authentication: {}
+    metaSortKey: -400
+    isPrivate: false
+    settingStoreCookies: true
+    settingSendCookies: true
+    settingDisableRenderRequestBody: false
+    settingEncodeUrl: true
+    settingRebuildPath: true
+    settingFollowRedirects: global
+    _type: request
+  - _id: req_subip_usuario_cadastrar_leitor
+    parentId: fld_subip_usuario
+    modified: 1780000000113
+    created: 1780000000113
+    url: http://localhost:8080/usuarios
+    name: Cadastrar LEITOR
+    description: "Use depois de cadastrar uma pessoa livre. O pessoaId 4 costuma ser o Diego do exemplo de Pessoa."
+    method: POST
+    body:
+      mimeType: application/json
+      text: |-
+        {
+          "login": "diego.leitor",
+          "perfil": "LEITOR",
+          "pessoaId": 4
+        }
+    parameters: []
+    headers:
+      - name: Content-Type
+        value: application/json
+      - name: User-Agent
+        value: insomnia/2023.5.8
+    authentication: {}
+    metaSortKey: -300
+    isPrivate: false
+    settingStoreCookies: true
+    settingSendCookies: true
+    settingDisableRenderRequestBody: false
+    settingEncodeUrl: true
+    settingRebuildPath: true
+    settingFollowRedirects: global
+    _type: request
+  - _id: req_subip_usuario_cadastrar_atendente
+    parentId: fld_subip_usuario
+    modified: 1780000000114
+    created: 1780000000114
+    url: http://localhost:8080/usuarios
+    name: Cadastrar ATENDENTE
+    description: "Ajuste pessoaId para uma pessoa que ainda nao tenha usuario."
+    method: POST
+    body:
+      mimeType: application/json
+      text: |-
+        {
+          "login": "maria.atendente",
+          "perfil": "ATENDENTE",
+          "pessoaId": 5
+        }
+    parameters: []
+    headers:
+      - name: Content-Type
+        value: application/json
+      - name: User-Agent
+        value: insomnia/2023.5.8
+    authentication: {}
+    metaSortKey: -290
+    isPrivate: false
+    settingStoreCookies: true
+    settingSendCookies: true
+    settingDisableRenderRequestBody: false
+    settingEncodeUrl: true
+    settingRebuildPath: true
+    settingFollowRedirects: global
+    _type: request
+  - _id: req_subip_usuario_cadastrar_admin
+    parentId: fld_subip_usuario
+    modified: 1780000000115
+    created: 1780000000115
+    url: http://localhost:8080/usuarios
+    name: Cadastrar ADMIN
+    description: "Ajuste pessoaId para uma pessoa que ainda nao tenha usuario."
+    method: POST
+    body:
+      mimeType: application/json
+      text: |-
+        {
+          "login": "joao.admin",
+          "perfil": "ADMIN",
+          "pessoaId": 6
+        }
+    parameters: []
+    headers:
+      - name: Content-Type
+        value: application/json
+      - name: User-Agent
+        value: insomnia/2023.5.8
+    authentication: {}
+    metaSortKey: -280
+    isPrivate: false
+    settingStoreCookies: true
+    settingSendCookies: true
+    settingDisableRenderRequestBody: false
+    settingEncodeUrl: true
+    settingRebuildPath: true
+    settingFollowRedirects: global
+    _type: request
+  - _id: req_subip_usuario_alterar
+    parentId: fld_subip_usuario
+    modified: 1780000000116
+    created: 1780000000116
+    url: http://localhost:8080/usuarios/4
+    name: Alterar
+    description: "Exemplo para alterar o usuario criado no cadastro LEITOR."
+    method: PUT
+    body:
+      mimeType: application/json
+      text: |-
+        {
+          "login": "diego.atendente",
+          "perfil": "ATENDENTE",
+          "pessoaId": 4
+        }
+    parameters: []
+    headers:
+      - name: Content-Type
+        value: application/json
+      - name: User-Agent
+        value: insomnia/2023.5.8
+    authentication: {}
+    metaSortKey: -200
+    isPrivate: false
+    settingStoreCookies: true
+    settingSendCookies: true
+    settingDisableRenderRequestBody: false
+    settingEncodeUrl: true
+    settingRebuildPath: true
+    settingFollowRedirects: global
+    _type: request
+  - _id: req_subip_usuario_excluir
+    parentId: fld_subip_usuario
+    modified: 1780000000117
+    created: 1780000000117
+    url: http://localhost:8080/usuarios/4
+    name: Excluir
+    description: "Exemplo para excluir o usuario criado no cadastro LEITOR."
+    method: DELETE
+    body: {}
+    parameters: []
+    headers:
+      - name: User-Agent
+        value: insomnia/2023.5.8
+    authentication: {}
+    metaSortKey: -100
     isPrivate: false
     settingStoreCookies: true
     settingSendCookies: true
@@ -1228,7 +1435,8 @@ resources:
       text: |-
         {
           "titulo": "Livro com ISBN invalido",
-          "isbn": "978-85-359-0277-7"
+          "isbn": "978-85-359-0277-7",
+          "generoId": 1
         }
     parameters: []
     headers:
@@ -1259,7 +1467,8 @@ resources:
       text: |-
         {
           "titulo": "Livro com ISBN formatado",
-          "isbn": "978.85.359-0277-7"
+          "isbn": "978.85.359-0277-7",
+          "generoId": 1
         }
     parameters: []
     headers:
@@ -1302,6 +1511,70 @@ resources:
         value: insomnia/2023.5.8
     authentication: {}
     metaSortKey: -200
+    isPrivate: false
+    settingStoreCookies: true
+    settingSendCookies: true
+    settingDisableRenderRequestBody: false
+    settingEncodeUrl: true
+    settingRebuildPath: true
+    settingFollowRedirects: global
+    _type: request
+  - _id: req_subip_validacao_login_duplicado
+    parentId: fld_subip_validacoes
+    modified: 1780000000118
+    created: 1780000000118
+    url: http://localhost:8080/usuarios
+    name: Login duplicado
+    description: "Erro esperado: Login ja cadastrado."
+    method: POST
+    body:
+      mimeType: application/json
+      text: |-
+        {
+          "login": "ana",
+          "perfil": "LEITOR",
+          "pessoaId": 4
+        }
+    parameters: []
+    headers:
+      - name: Content-Type
+        value: application/json
+      - name: User-Agent
+        value: insomnia/2023.5.8
+    authentication: {}
+    metaSortKey: -175
+    isPrivate: false
+    settingStoreCookies: true
+    settingSendCookies: true
+    settingDisableRenderRequestBody: false
+    settingEncodeUrl: true
+    settingRebuildPath: true
+    settingFollowRedirects: global
+    _type: request
+  - _id: req_subip_validacao_pessoa_usuario_duplicado
+    parentId: fld_subip_validacoes
+    modified: 1780000000119
+    created: 1780000000119
+    url: http://localhost:8080/usuarios
+    name: Pessoa com usuario duplicado
+    description: "Erro esperado: Pessoa ja possui usuario cadastrado."
+    method: POST
+    body:
+      mimeType: application/json
+      text: |-
+        {
+          "login": "ana.novo",
+          "perfil": "LEITOR",
+          "pessoaId": 1
+        }
+    parameters: []
+    headers:
+      - name: Content-Type
+        value: application/json
+      - name: User-Agent
+        value: insomnia/2023.5.8
+    authentication: {}
+    metaSortKey: -150
     isPrivate: false
     settingStoreCookies: true
     settingSendCookies: true
@@ -1365,7 +1638,7 @@ resources:
     parentId: wrk_subip_mg_crud
     modified: 1780000000052
     created: 1780000000052
-    fileName: SUBiP-MG - CRUD, Emprestimos e Reservas
+    fileName: SUBiP-MG - Backend Completo
     contents: ""
     contentType: yaml
     _type: api_spec

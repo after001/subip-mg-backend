@@ -33,6 +33,19 @@ class CrudControllerTests {
 				.andExpect(status().isOk())
 				.andExpect(jsonPath("$.length()").value(3));
 
+		mockMvc.perform(get("/usuarios"))
+				.andExpect(status().isOk())
+				.andExpect(jsonPath("$.length()").value(3))
+				.andExpect(jsonPath("$[0].login").value("ana"))
+				.andExpect(jsonPath("$[0].perfil").value("LEITOR"))
+				.andExpect(jsonPath("$[1].perfil").value("ATENDENTE"))
+				.andExpect(jsonPath("$[2].perfil").value("ADMIN"));
+
+		mockMvc.perform(delete("/pessoas/3"))
+				.andExpect(status().isBadRequest())
+				.andExpect(jsonPath("$.message")
+						.value("Nao e possivel excluir uma pessoa que possui usuario cadastrado."));
+
 		mockMvc.perform(get("/acervo"))
 				.andExpect(status().isOk())
 				.andExpect(jsonPath("$.length()").value(4))
@@ -120,6 +133,61 @@ class CrudControllerTests {
 				.getContentAsString();
 
 		Long pessoaId = getId(pessoaResponse);
+
+		String usuarioJson = """
+				{
+					"login": "diego",
+					"perfil": "LEITOR",
+					"pessoaId": %d
+				}
+				""".formatted(pessoaId);
+
+		String usuarioResponse = mockMvc.perform(post("/usuarios")
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(usuarioJson))
+				.andExpect(status().isCreated())
+				.andExpect(jsonPath("$.login").value("diego"))
+				.andExpect(jsonPath("$.perfil").value("LEITOR"))
+				.andExpect(jsonPath("$.pessoaId").value(pessoaId))
+				.andReturn()
+				.getResponse()
+				.getContentAsString();
+
+		Long usuarioId = getId(usuarioResponse);
+
+		mockMvc.perform(post("/usuarios")
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(usuarioJson))
+				.andExpect(status().isBadRequest())
+				.andExpect(jsonPath("$.message").value("Login ja cadastrado."));
+
+		mockMvc.perform(post("/usuarios")
+				.contentType(MediaType.APPLICATION_JSON)
+				.content("""
+						{
+							"login": "diego2",
+							"perfil": "LEITOR",
+							"pessoaId": %d
+						}
+						""".formatted(pessoaId)))
+				.andExpect(status().isBadRequest())
+				.andExpect(jsonPath("$.message").value("Pessoa ja possui usuario cadastrado."));
+
+		mockMvc.perform(put("/usuarios/{id}", usuarioId)
+				.contentType(MediaType.APPLICATION_JSON)
+				.content("""
+						{
+							"login": "diego.atendente",
+							"perfil": "ATENDENTE",
+							"pessoaId": %d
+						}
+						""".formatted(pessoaId)))
+				.andExpect(status().isOk())
+				.andExpect(jsonPath("$.login").value("diego.atendente"))
+				.andExpect(jsonPath("$.perfil").value("ATENDENTE"));
+
+		mockMvc.perform(delete("/usuarios/{id}", usuarioId))
+				.andExpect(status().isNoContent());
 
 		String pessoaAlteradaJson = """
 				{
