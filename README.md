@@ -48,8 +48,10 @@ http://localhost:8080
 | DELETE | `/pessoas/{id}` | Exclui pessoa, se nao houver emprestimos, reservas ou usuario vinculados |
 | GET | `/usuarios` | Lista usuarios |
 | GET | `/usuarios/{id}` | Busca usuario por id |
+| GET | `/usuarios/existe?login=ana` | Verifica se login ja existe |
 | POST | `/usuarios` | Cadastra usuario vinculado a uma pessoa |
 | PUT | `/usuarios/{id}` | Altera usuario |
+| PATCH | `/usuarios/{id}/senha` | Altera senha do usuario |
 | DELETE | `/usuarios/{id}` | Exclui usuario |
 | GET | `/generos` | Lista generos |
 | GET | `/generos/{id}` | Busca genero por id |
@@ -74,7 +76,7 @@ http://localhost:8080
 
 ## Usuarios e perfis
 
-`Usuario` representa o perfil operacional vinculado a uma `Pessoa`. Nesta etapa ele ainda nao faz login real e nao possui senha.
+`Usuario` representa o perfil operacional vinculado a uma `Pessoa`. Nesta etapa existe login simples, sem Spring Security, sem JWT e sem BCrypt.
 
 Perfis disponiveis:
 
@@ -87,7 +89,20 @@ Regras principais:
 - Login deve ser unico.
 - Uma pessoa so pode ter um usuario.
 - Perfil e pessoa sao obrigatorios.
-- Senha, BCrypt, JWT e Spring Security ficam como etapa futura.
+- Ao cadastrar usuario, a senha inicial e igual ao login.
+- A senha nao e retornada nos DTOs de resposta.
+- BCrypt, JWT e Spring Security ficam como etapa futura.
+
+## Endpoints de autenticacao
+
+| Metodo | Rota | Descricao |
+| --- | --- | --- |
+| POST | `/autenticacao/login` | Confere login e senha e retorna os dados do usuario |
+
+Regras principais:
+
+- Login invalido ou senha invalida retornam erro.
+- Ainda nao existe token; o frontend pode guardar o usuario retornado, como no exemplo da avaliacao pratica.
 
 ## Endpoints de emprestimo
 
@@ -155,6 +170,24 @@ Cadastro de usuario:
   "login": "ana",
   "perfil": "LEITOR",
   "pessoaId": 1
+}
+```
+
+Login:
+
+```json
+{
+  "login": "ana",
+  "senha": "ana"
+}
+```
+
+Alteracao de senha:
+
+```json
+{
+  "senhaAtual": "ana",
+  "novaSenha": "nova.senha"
 }
 ```
 

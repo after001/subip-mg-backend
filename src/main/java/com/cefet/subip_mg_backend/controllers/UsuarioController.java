@@ -7,15 +7,18 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.cefet.subip_mg_backend.dto.UsuarioRequestDTO;
 import com.cefet.subip_mg_backend.dto.UsuarioResponseDTO;
+import com.cefet.subip_mg_backend.dto.UsuarioSenhaRequestDTO;
 import com.cefet.subip_mg_backend.services.UsuarioService;
 
 import jakarta.validation.Valid;
@@ -31,6 +34,12 @@ public class UsuarioController {
 	public ResponseEntity<List<UsuarioResponseDTO>> listar() {
 		List<UsuarioResponseDTO> lista = usuarioService.listar();
 		return ResponseEntity.status(HttpStatus.OK).body(lista);
+	}
+
+	@GetMapping("/existe")
+	public ResponseEntity<Boolean> existe(@RequestParam String login) {
+		boolean existe = usuarioService.existePorLogin(login);
+		return ResponseEntity.status(HttpStatus.OK).body(existe);
 	}
 
 	@GetMapping("/{id}")
@@ -54,6 +63,12 @@ public class UsuarioController {
 	@DeleteMapping("/{id}")
 	public ResponseEntity<Void> excluir(@PathVariable Long id) {
 		usuarioService.excluir(id);
+		return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+	}
+
+	@PatchMapping("/{id}/senha")
+	public ResponseEntity<Void> alterarSenha(@PathVariable Long id, @Valid @RequestBody UsuarioSenhaRequestDTO dto) {
+		usuarioService.alterarSenha(id, dto);
 		return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
 	}
 }

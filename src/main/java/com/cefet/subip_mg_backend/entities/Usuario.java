@@ -23,6 +23,9 @@ public class Usuario {
 	@Column(nullable = false, unique = true, length = 100)
 	private String login;
 
+	@Column(nullable = false, length = 100)
+	private String senha;
+
 	@Enumerated(EnumType.STRING)
 	@Column(nullable = false, length = 20)
 	private PerfilUsuario perfil;
@@ -34,9 +37,10 @@ public class Usuario {
 	public Usuario() {
 	}
 
-	public Usuario(Long id, String login, PerfilUsuario perfil, Pessoa pessoa) {
+	public Usuario(Long id, String login, String senha, PerfilUsuario perfil, Pessoa pessoa) {
 		this.id = id;
 		this.login = login;
+		this.senha = senha;
 		this.perfil = perfil;
 		this.pessoa = pessoa;
 	}
@@ -55,6 +59,14 @@ public class Usuario {
 
 	public void setLogin(String login) {
 		this.login = login;
+	}
+
+	public String getSenha() {
+		return senha;
+	}
+
+	public void setSenha(String senha) {
+		this.senha = senha;
 	}
 
 	public PerfilUsuario getPerfil() {

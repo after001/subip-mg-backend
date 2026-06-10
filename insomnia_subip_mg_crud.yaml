@@ -1,6 +1,6 @@
 _type: export
 __export_format: 4
-__export_date: 2026-06-03T22:35:00.000Z
+__export_date: 2026-06-10T18:00:00.000Z
 __export_source: insomnia.desktop.app:v2023.5.8
 resources:
   - _id: wrk_subip_mg_crud
@@ -11,6 +11,78 @@ resources:
     description: ""
     scope: collection
     _type: workspace
+  - _id: fld_subip_autenticacao
+    parentId: wrk_subip_mg_crud
+    modified: 1780000000120
+    created: 1780000000120
+    name: Autenticacao
+    description: "Login simples, sem token/JWT. Retorna os dados do usuario autenticado."
+    environment: {}
+    environmentPropertyOrder: null
+    metaSortKey: -600
+    _type: request_group
+  - _id: req_subip_autenticacao_login
+    parentId: fld_subip_autenticacao
+    modified: 1780000000121
+    created: 1780000000121
+    url: http://localhost:8080/autenticacao/login
+    name: Login
+    description: "Os usuarios do import.sql usam senha inicial igual ao login."
+    method: POST
+    body:
+      mimeType: application/json
+      text: |-
+        {
+          "login": "ana",
+          "senha": "ana"
+        }
+    parameters: []
+    headers:
+      - name: Content-Type
+        value: application/json
+      - name: User-Agent
+        value: insomnia/2023.5.8
+    authentication: {}
+    metaSortKey: -500
+    isPrivate: false
+    settingStoreCookies: true
+    settingSendCookies: true
+    settingDisableRenderRequestBody: false
+    settingEncodeUrl: true
+    settingRebuildPath: true
+    settingFollowRedirects: global
+    _type: request
+  - _id: req_subip_autenticacao_login_invalido
+    parentId: fld_subip_autenticacao
+    modified: 1780000000122
+    created: 1780000000122
+    url: http://localhost:8080/autenticacao/login
+    name: Login invalido
+    description: "Erro esperado: Login ou senha invalidos."
+    method: POST
+    body:
+      mimeType: application/json
+      text: |-
+        {
+          "login": "ana",
+          "senha": "senha.errada"
+        }
+    parameters: []
+    headers:
+      - name: Content-Type
+        value: application/json
+      - name: User-Agent
+        value: insomnia/2023.5.8
+    authentication: {}
+    metaSortKey: -400
+    isPrivate: false
+    settingStoreCookies: true
+    settingSendCookies: true
+    settingDisableRenderRequestBody: false
+    settingEncodeUrl: true
+    settingRebuildPath: true
+    settingFollowRedirects: global
+    _type: request
   - _id: fld_subip_acervo
     parentId: wrk_subip_mg_crud
     modified: 1780000000080
@@ -284,7 +356,7 @@ resources:
     modified: 1780000000110
     created: 1780000000110
     name: Usuario
-    description: "Usuario ainda nao autentica: por enquanto organiza login e perfil vinculados a uma pessoa."
+    description: "Ao cadastrar, a senha inicial fica igual ao login. A senha nao aparece nos responses."
     environment: {}
     environmentPropertyOrder: null
     metaSortKey: -375
@@ -335,13 +407,36 @@ resources:
     settingRebuildPath: true
     settingFollowRedirects: global
     _type: request
+  - _id: req_subip_usuario_existe
+    parentId: fld_subip_usuario
+    modified: 1780000000123
+    created: 1780000000123
+    url: http://localhost:8080/usuarios/existe?login=ana
+    name: Verificar login existente
+    description: "Retorna true ou false."
+    method: GET
+    body: {}
+    parameters: []
+    headers:
+      - name: User-Agent
+        value: insomnia/2023.5.8
+    authentication: {}
+    metaSortKey: -350
+    isPrivate: false
+    settingStoreCookies: true
+    settingSendCookies: true
+    settingDisableRenderRequestBody: false
+    settingEncodeUrl: true
+    settingRebuildPath: true
+    settingFollowRedirects: global
+    _type: request
   - _id: req_subip_usuario_cadastrar_leitor
     parentId: fld_subip_usuario
     modified: 1780000000113
     created: 1780000000113
     url: http://localhost:8080/usuarios
     name: Cadastrar LEITOR
-    description: "Use depois de cadastrar uma pessoa livre. O pessoaId 4 costuma ser o Diego do exemplo de Pessoa."
+    description: "Use depois de cadastrar uma pessoa livre. A senha inicial sera igual ao login."
     method: POST
     body:
       mimeType: application/json
@@ -455,6 +550,37 @@ resources:
         value: insomnia/2023.5.8
     authentication: {}
     metaSortKey: -200
+    isPrivate: false
+    settingStoreCookies: true
+    settingSendCookies: true
+    settingDisableRenderRequestBody: false
+    settingEncodeUrl: true
+    settingRebuildPath: true
+    settingFollowRedirects: global
+    _type: request
+  - _id: req_subip_usuario_alterar_senha
+    parentId: fld_subip_usuario
+    modified: 1780000000124
+    created: 1780000000124
+    url: http://localhost:8080/usuarios/4/senha
+    name: Alterar senha
+    description: "Use depois de cadastrar o usuario de exemplo. A senha inicial dele sera diego.leitor."
+    method: PATCH
+    body:
+      mimeType: application/json
+      text: |-
+        {
+          "senhaAtual": "diego.leitor",
+          "novaSenha": "nova.senha"
+        }
+    parameters: []
+    headers:
+      - name: Content-Type
+        value: application/json
+      - name: User-Agent
+        value: insomnia/2023.5.8
+    authentication: {}
+    metaSortKey: -150
     isPrivate: false
     settingStoreCookies: true
     settingSendCookies: true
