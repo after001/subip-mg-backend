@@ -2,7 +2,6 @@ package com.cefet.subip_mg_backend;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -39,41 +38,8 @@ class CrudControllerTests {
 				.andExpect(jsonPath("$.length()").value(3))
 				.andExpect(jsonPath("$[0].login").value("ana"))
 				.andExpect(jsonPath("$[0].perfil").value("LEITOR"))
-				.andExpect(jsonPath("$[0].senha").doesNotExist())
 				.andExpect(jsonPath("$[1].perfil").value("ATENDENTE"))
 				.andExpect(jsonPath("$[2].perfil").value("ADMIN"));
-
-		mockMvc.perform(get("/usuarios/existe").param("login", "ana"))
-				.andExpect(status().isOk())
-				.andExpect(jsonPath("$").value(true));
-
-		mockMvc.perform(get("/usuarios/existe").param("login", "usuario.inexistente"))
-				.andExpect(status().isOk())
-				.andExpect(jsonPath("$").value(false));
-
-		mockMvc.perform(post("/autenticacao/login")
-				.contentType(MediaType.APPLICATION_JSON)
-				.content("""
-						{
-							"login": "ana",
-							"senha": "ana"
-						}
-						"""))
-				.andExpect(status().isOk())
-				.andExpect(jsonPath("$.login").value("ana"))
-				.andExpect(jsonPath("$.perfil").value("LEITOR"))
-				.andExpect(jsonPath("$.senha").doesNotExist());
-
-		mockMvc.perform(post("/autenticacao/login")
-				.contentType(MediaType.APPLICATION_JSON)
-				.content("""
-						{
-							"login": "ana",
-							"senha": "senha.errada"
-						}
-						"""))
-				.andExpect(status().isBadRequest())
-				.andExpect(jsonPath("$.message").value("Login ou senha invalidos."));
 
 		mockMvc.perform(delete("/pessoas/3"))
 				.andExpect(status().isBadRequest())
@@ -183,55 +149,11 @@ class CrudControllerTests {
 				.andExpect(jsonPath("$.login").value("diego"))
 				.andExpect(jsonPath("$.perfil").value("LEITOR"))
 				.andExpect(jsonPath("$.pessoaId").value(pessoaId))
-				.andExpect(jsonPath("$.senha").doesNotExist())
 				.andReturn()
 				.getResponse()
 				.getContentAsString();
 
 		Long usuarioId = getId(usuarioResponse);
-
-		mockMvc.perform(post("/autenticacao/login")
-				.contentType(MediaType.APPLICATION_JSON)
-				.content("""
-						{
-							"login": "diego",
-							"senha": "diego"
-						}
-						"""))
-				.andExpect(status().isOk())
-				.andExpect(jsonPath("$.id").value(usuarioId));
-
-		mockMvc.perform(patch("/usuarios/{id}/senha", usuarioId)
-				.contentType(MediaType.APPLICATION_JSON)
-				.content("""
-						{
-							"senhaAtual": "diego",
-							"novaSenha": "senha.nova"
-						}
-						"""))
-				.andExpect(status().isNoContent());
-
-		mockMvc.perform(post("/autenticacao/login")
-				.contentType(MediaType.APPLICATION_JSON)
-				.content("""
-						{
-							"login": "diego",
-							"senha": "senha.nova"
-						}
-						"""))
-				.andExpect(status().isOk())
-				.andExpect(jsonPath("$.id").value(usuarioId));
-
-		mockMvc.perform(patch("/usuarios/{id}/senha", usuarioId)
-				.contentType(MediaType.APPLICATION_JSON)
-				.content("""
-						{
-							"senhaAtual": "senha.errada",
-							"novaSenha": "outra.senha"
-						}
-						"""))
-				.andExpect(status().isBadRequest())
-				.andExpect(jsonPath("$.message").value("Senha atual invalida."));
 
 		mockMvc.perform(post("/usuarios")
 				.contentType(MediaType.APPLICATION_JSON)

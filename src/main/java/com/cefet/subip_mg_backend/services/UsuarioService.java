@@ -8,7 +8,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.cefet.subip_mg_backend.dto.UsuarioRequestDTO;
 import com.cefet.subip_mg_backend.dto.UsuarioResponseDTO;
-import com.cefet.subip_mg_backend.dto.UsuarioSenhaRequestDTO;
 import com.cefet.subip_mg_backend.entities.Pessoa;
 import com.cefet.subip_mg_backend.entities.Usuario;
 import com.cefet.subip_mg_backend.exceptions.DatabaseException;
@@ -44,7 +43,6 @@ public class UsuarioService {
 
 		Usuario entity = new Usuario();
 		copiarDtoParaEntidade(dto, entity);
-		entity.setSenha(dto.getLogin());
 		entity = usuarioRepository.save(entity);
 
 		return new UsuarioResponseDTO(entity);
@@ -75,23 +73,6 @@ public class UsuarioService {
 		}
 
 		usuarioRepository.deleteById(id);
-	}
-
-	@Transactional(readOnly = true)
-	public boolean existePorLogin(String login) {
-		return usuarioRepository.existsByLogin(login);
-	}
-
-	@Transactional
-	public void alterarSenha(Long id, UsuarioSenhaRequestDTO dto) {
-		Usuario entity = buscarEntidadePorId(id);
-
-		if (!entity.getSenha().equals(dto.getSenhaAtual())) {
-			throw new DatabaseException("Senha atual invalida.");
-		}
-
-		entity.setSenha(dto.getNovaSenha());
-		usuarioRepository.save(entity);
 	}
 
 	private Usuario buscarEntidadePorId(Long id) {

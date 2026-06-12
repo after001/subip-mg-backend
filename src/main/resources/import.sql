@@ -4,9 +4,9 @@ INSERT INTO tb_pessoa (nome, cpf, email) VALUES ('Bruno Lima', '22222222222', 'b
 INSERT INTO tb_pessoa (nome, cpf, email) VALUES ('Carla Rocha', '33333333333', 'carla.rocha@email.com');
 
 -- Usuarios
-INSERT INTO tb_usuario (login, senha, perfil, pessoa_id) VALUES ('ana', 'ana', 'LEITOR', 1);
-INSERT INTO tb_usuario (login, senha, perfil, pessoa_id) VALUES ('bruno', 'bruno', 'ATENDENTE', 2);
-INSERT INTO tb_usuario (login, senha, perfil, pessoa_id) VALUES ('carla', 'carla', 'ADMIN', 3);
+INSERT INTO tb_usuario (login, perfil, pessoa_id) VALUES ('ana', 'LEITOR', 1);
+INSERT INTO tb_usuario (login, perfil, pessoa_id) VALUES ('bruno', 'ATENDENTE', 2);
+INSERT INTO tb_usuario (login, perfil, pessoa_id) VALUES ('carla', 'ADMIN', 3);
 
 -- Generos
 INSERT INTO tb_genero (descricao) VALUES ('Romance');
