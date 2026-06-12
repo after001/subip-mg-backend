@@ -75,6 +75,7 @@ http://localhost:8080
 ## Usuarios e perfis
 
 `Usuario` representa o perfil operacional vinculado a uma `Pessoa`. Nesta etapa ele ainda nao faz login real e nao possui senha.
+O campo `login` e apenas um identificador unico do usuario dentro do sistema.
 
 Perfis disponiveis:
 
@@ -88,6 +89,11 @@ Regras principais:
 - Uma pessoa so pode ter um usuario.
 - Perfil e pessoa sao obrigatorios.
 - Senha, BCrypt, JWT e Spring Security ficam como etapa futura.
+
+## Escopo atual sem seguranca
+
+Esta versao nao possui endpoint de autenticacao, filtro JWT, BCrypt ou protecao de rotas por perfil.
+Os perfis de `Usuario` foram mantidos apenas para organizar os tipos de uso do sistema sem aplicar autorizacao real.
 
 ## Endpoints de emprestimo
 
@@ -172,8 +178,8 @@ Registro de emprestimo:
 
 ```json
 {
-  "dataRetirada": "2026-05-28",
-  "dataDevolucaoPrevista": "2026-06-04",
+  "dataRetirada": "2026-06-12",
+  "dataDevolucaoPrevista": "2026-06-19",
   "exemplarId": 1,
   "pessoaId": 1
 }
@@ -192,7 +198,7 @@ Renovacao:
 
 ```json
 {
-  "dataDevolucaoPrevista": "2026-06-11"
+  "dataDevolucaoPrevista": "2026-06-26"
 }
 ```
 
@@ -200,7 +206,7 @@ Devolucao:
 
 ```json
 {
-  "dataDevolucao": "2026-06-13"
+  "dataDevolucao": "2026-06-28"
 }
 ```
 

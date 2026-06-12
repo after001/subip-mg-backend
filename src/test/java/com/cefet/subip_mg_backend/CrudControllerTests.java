@@ -1,5 +1,7 @@
 package com.cefet.subip_mg_backend;
 
+import java.time.LocalDate;
+
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -304,14 +306,19 @@ class CrudControllerTests {
 				.andExpect(status().isOk())
 				.andExpect(jsonPath("$.length()").value(0));
 
+		LocalDate dataRetirada = LocalDate.now();
+		LocalDate dataDevolucaoPrevista = dataRetirada.plusDays(7);
+		LocalDate dataDevolucaoPrevistaRenovada = dataDevolucaoPrevista.plusDays(7);
+		LocalDate dataDevolucao = dataDevolucaoPrevistaRenovada.plusDays(2);
+
 		String emprestimoJson = """
 				{
-					"dataRetirada": "2026-05-28",
-					"dataDevolucaoPrevista": "2026-06-04",
+					"dataRetirada": "%s",
+					"dataDevolucaoPrevista": "%s",
 					"exemplarId": 1,
 					"pessoaId": 1
 				}
-				""";
+				""".formatted(dataRetirada, dataDevolucaoPrevista);
 
 		String emprestimoResponse = mockMvc.perform(post("/emprestimos")
 				.contentType(MediaType.APPLICATION_JSON)
@@ -333,8 +340,8 @@ class CrudControllerTests {
 
 		mockMvc.perform(get("/emprestimos/{id}", emprestimoId))
 				.andExpect(status().isOk())
-				.andExpect(jsonPath("$.dataRetirada").value("2026-05-28"))
-				.andExpect(jsonPath("$.dataDevolucaoPrevista").value("2026-06-04"));
+				.andExpect(jsonPath("$.dataRetirada").value(dataRetirada.toString()))
+				.andExpect(jsonPath("$.dataDevolucaoPrevista").value(dataDevolucaoPrevista.toString()));
 
 		mockMvc.perform(get("/exemplares/1"))
 				.andExpect(status().isOk())
@@ -414,31 +421,31 @@ class CrudControllerTests {
 
 		String renovacaoJson = """
 				{
-					"dataDevolucaoPrevista": "2026-06-11"
+					"dataDevolucaoPrevista": "%s"
 				}
-				""";
+				""".formatted(dataDevolucaoPrevistaRenovada);
 
 		mockMvc.perform(put("/emprestimos/{id}/renovacao", emprestimoId)
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(renovacaoJson))
 				.andExpect(status().isOk())
 				.andExpect(jsonPath("$.situacao").value("RENOVADO"))
-				.andExpect(jsonPath("$.dataDevolucaoPrevista").value("2026-06-11"))
+				.andExpect(jsonPath("$.dataDevolucaoPrevista").value(dataDevolucaoPrevistaRenovada.toString()))
 				.andExpect(jsonPath("$.dataDevolucao").doesNotExist())
 				.andExpect(jsonPath("$.diasAtraso").value(0));
 
 		String devolucaoJson = """
 				{
-					"dataDevolucao": "2026-06-13"
+					"dataDevolucao": "%s"
 				}
-				""";
+				""".formatted(dataDevolucao);
 
 		mockMvc.perform(put("/emprestimos/{id}/devolucao", emprestimoId)
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(devolucaoJson))
 				.andExpect(status().isOk())
 				.andExpect(jsonPath("$.situacao").value("DEVOLVIDO"))
-				.andExpect(jsonPath("$.dataDevolucao").value("2026-06-13"))
+				.andExpect(jsonPath("$.dataDevolucao").value(dataDevolucao.toString()))
 				.andExpect(jsonPath("$.diasAtraso").value(2));
 
 		mockMvc.perform(get("/exemplares/1"))
@@ -449,9 +456,9 @@ class CrudControllerTests {
 				.contentType(MediaType.APPLICATION_JSON)
 				.content("""
 						{
-							"dataDevolucaoPrevista": "2026-06-20"
+							"dataDevolucaoPrevista": "%s"
 						}
-						"""))
+						""".formatted(dataDevolucao.plusDays(7))))
 				.andExpect(status().isBadRequest())
 				.andExpect(jsonPath("$.message").value("Somente emprestimos abertos podem ser renovados."));
 

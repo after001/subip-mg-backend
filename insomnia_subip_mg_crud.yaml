@@ -1189,8 +1189,8 @@ resources:
       mimeType: application/json
       text: |-
         {
-          "dataRetirada": "2026-05-28",
-          "dataDevolucaoPrevista": "2026-06-04",
+          "dataRetirada": "2026-06-12",
+          "dataDevolucaoPrevista": "2026-06-19",
           "exemplarId": 1,
           "pessoaId": 1
         }
@@ -1222,7 +1222,7 @@ resources:
       mimeType: application/json
       text: |-
         {
-          "dataDevolucaoPrevista": "2026-06-11"
+          "dataDevolucaoPrevista": "2026-06-26"
         }
     parameters: []
     headers:
@@ -1252,7 +1252,7 @@ resources:
       mimeType: application/json
       text: |-
         {
-          "dataDevolucao": "2026-06-13"
+          "dataDevolucao": "2026-06-28"
         }
     parameters: []
     headers:
@@ -1595,8 +1595,8 @@ resources:
       mimeType: application/json
       text: |-
         {
-          "dataRetirada": "2026-05-28",
-          "dataDevolucaoPrevista": "2026-06-04",
+          "dataRetirada": "2026-06-12",
+          "dataDevolucaoPrevista": "2026-06-19",
           "exemplarId": 2,
           "pessoaId": 1
         }
